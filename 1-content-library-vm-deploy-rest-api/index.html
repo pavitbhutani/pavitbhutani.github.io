@@ -123,7 +123,6 @@ $contentLibraryItemFindBody = @&quot;
     }
   }
 &quot;@
-
 $contentLibraryItemFindUrl = $vcenterBaseUrl + &quot;com/vmware/content/library/item?~action=find&quot;
 $contentLibraryItemId = (Invoke-RestMethod -Uri $contentLibraryItemFindUrl -Method Post -Headers $vcenterHeaders -Body $contentLibraryItemFindBody -ContentType &quot;application/json&quot; -SkipCertificateCheck).value
 $contentLibraryItemUrl = $vcenterBaseUrl + &quot;com/vmware/content/library/item/id:$contentLibraryItemId&quot;
