@@ -21,5 +21,15 @@
 This functionality can be extended to your ITSM tool as well if it provides the option to make API calls to other solutions like vSphere, giving you the ability to automate standard change requests like VM creation.</description>
     </item>
     
+    <item>
+      <title>How to Deploy a VM Template from Content Library using vSphere Automation API</title>
+      <link>https://pavitbhutani.github.io/2-test-post/</link>
+      <pubDate>Wed, 15 Jul 2020 13:33:50 +0000</pubDate>
+      
+      <guid>https://pavitbhutani.github.io/2-test-post/</guid>
+      <description>Introduction In this post, we&amp;rsquo;ll look at how to deploy a VM from from a template in content library using vSphere Automation API available at VMware API Explorer. I will use PowerShell in this post but you can use any other tool of choice as long as it can interact with json.
+This functionality can be extended to your ITSM tool as well if it provides the option to make API calls to other solutions like vSphere, giving you the ability to automate standard change requests like VM creation.</description>
+    </item>
+    
   </channel>
 </rss>
