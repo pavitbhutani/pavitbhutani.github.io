@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>My Blog</title>
+    <link>https://pavitbhutani.github.io/</link>
+    <description>Recent content on My Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 15 Jul 2020 13:33:50 +0000</lastBuildDate>
+    
+	<atom:link href="https://pavitbhutani.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>How to Deploy a VM Template from Content Library using vSphere Automation API</title>
+      <link>https://pavitbhutani.github.io/1-content-library-vm-deploy-rest-api/</link>
+      <pubDate>Wed, 15 Jul 2020 13:33:50 +0000</pubDate>
+      
+      <guid>https://pavitbhutani.github.io/1-content-library-vm-deploy-rest-api/</guid>
+      <description>Introduction In this post, we&amp;rsquo;ll look at how to deploy a VM from from a template in content library using vSphere Automation API available at VMware API Explorer. I will use PowerShell in this post but you can use any other tool of choice as long as it can interact with json.
+This functionality can be extended to your ITSM tool as well if it provides the option to make API calls to other solutions like vSphere, giving you the ability to automate standard change requests like VM creation.</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>https://pavitbhutani.github.io/page/about/</link>
+      <pubDate>Fri, 03 Apr 2015 02:13:50 +0000</pubDate>
+      
+      <guid>https://pavitbhutani.github.io/page/about/</guid>
+      <description>About Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean nec dolor in magna lobortis egestas. Suspendisse eu erat tempor, tristique neque eu, convallis nulla. Curabitur vel bibendum lacus, at semper mauris. Suspendisse aliquet commodo ex, sed sagittis metus aliquam id. Maecenas feugiat rutrum lorem vel imperdiet. Nullam ornare lectus ut enim finibus, et porttitor mi tincidunt. Aenean lacinia, leo quis vehicula eleifend, quam libero sagittis erat, at euismod augue mauris et sapien.</description>
+    </item>
+    
+    <item>
+      <title>Contact</title>
+      <link>https://pavitbhutani.github.io/page/contact/</link>
+      <pubDate>Fri, 03 Apr 2015 02:13:50 +0000</pubDate>
+      
+      <guid>https://pavitbhutani.github.io/page/contact/</guid>
+      <description>Contact Aenean ipsum justo, semper eu nisl ut, pretium tincidunt sem. Praesent et diam sit amet lacus lobortis dictum a id lacus. Quisque hendrerit sit amet turpis eu varius. Ut id lorem ac felis ultrices tincidunt. Pellentesque consequat arcu ac fringilla imperdiet. Phasellus pellentesque, sapien non pulvinar blandit, sapien ante aliquet felis, vel porttitor sapien ante in lacus. Fusce non urna aliquet, malesuada nibh vel, luctus urna. Phasellus ut lacus molestie, varius purus quis, malesuada lorem.</description>
+    </item>
+    
+  </channel>
+</rss>
