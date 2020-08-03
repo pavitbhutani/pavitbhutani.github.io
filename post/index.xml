@@ -17,7 +17,7 @@
       <pubDate>Wed, 15 Jul 2020 13:33:50 +0000</pubDate>
       
       <guid>https://pavitbhutani.github.io/1-content-library-vm-deploy-rest-api/</guid>
-      <description>Introduction In this post, we&amp;rsquo;ll look at how to deploy a VM from from a template in content library using vSphere Automation API available at VMware Developer Documentation. I will use PowerShell in this post but you can use any other tool of choice as long as it can interact with json.
+      <description>Introduction In this post, we&amp;rsquo;ll look at how to deploy a VM from from a template in content library using vSphere Automation API available at VMware Developer Documentation, formerly known as VMware API Explorer. I will use PowerShell in this post but you can use any other tool of choice as long as it can interact with json.
 This functionality can be extended to your ITSM tool as well if it provides the option to make API calls to other solutions like vSphere, giving you the ability to automate standard change requests like VM creation.</description>
     </item>
     
