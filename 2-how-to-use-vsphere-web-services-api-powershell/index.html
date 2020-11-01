@@ -116,7 +116,7 @@ $vmhost = Get-VMHost -DistributedSwitch $vdsName -Name *01*
 <p>Just to make sure this is the right object type:</p>
 <p><img src="/vmhost-network-system-type.png" alt="vmhost-network-system-type"></p>
 <h3 id="step-3---building-parameters-and-invoking-the-method">Step 3 - Building Parameters and Invoking the Method:</h3>
-<p>Now that we have gotten to the right object type, let&rsquo;s create parameters to be passed to the method.
+<p>Now that we have gotten to the object type, let&rsquo;s create parameters to be passed to the method.
 As you see in the <a href="https://vdc-download.vmware.com/vmwb-repository/dcr-public/b50dcbbf-051d-4204-a3e7-e1b618c1e384/538cf2ec-b34f-4bae-a332-3820ef9e7773/vim.host.NetworkSystem.html#updateNetworkConfig">documentation of UpdateNetworkConfig</a>, it needs config and changeMode parameters.
 You see the object type of config as <a href="https://vdc-download.vmware.com/vmwb-repository/dcr-public/b50dcbbf-051d-4204-a3e7-e1b618c1e384/538cf2ec-b34f-4bae-a332-3820ef9e7773/vim.host.NetworkConfig.html">HostNetworkConfig</a>, so the PowerShell object type becomes VMware.Vim.HostNetworkConfig where VMware.Vim is the module name:</p>
 <pre><code>$hostNetworkConfig = New-Object VMware.Vim.HostNetworkConfig
