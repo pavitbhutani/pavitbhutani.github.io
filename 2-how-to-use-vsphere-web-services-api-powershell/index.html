@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>How to use vSphere Web Services API with PowerCLI &middot; </title>
+        <meta name="description" content="Use vSphere Web Services API to invoke methods.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.73.0" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta property="og:title" content="How to use vSphere Web Services API with PowerCLI">
+<meta property="og:description" content="Use vSphere Web Services API to invoke methods.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://pavitbhutani.github.io/2-how-to-use-vsphere-web-services-api-powershell/">
+        <link rel="stylesheet" href="https://pavitbhutani.github.io/dist/site.css">
+        <link rel="stylesheet" href="https://pavitbhutani.github.io/dist/syntax.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+        
+        
+        
+        
+    </head>
+    <body>
+        
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="Pavit Bhutani&#39;s Blog" href="https://pavitbhutani.github.io/">Pavit Bhutani&#39;s Blog</a>
+                            </h1>
+                        
+                        <a class="button-square" href="https://pavitbhutani.github.io/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/pavitbhutani" rel="me">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/pavitbhutani" rel="me">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:pavitbhutani@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                    </div>
+
+                    <ul class="site-nav">
+                        
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">How to use vSphere Web Services API with PowerCLI</h1>
+    
+        <p class="post-description" itemprop="description">Use vSphere Web Services API to invoke methods.</p>
+    
+    <p class="post-date post-line">
+        <span>Published <time datetime="2020-11-01" itemprop="datePublished">Sun, Nov 1, 2020</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
+            <span itemprop="name">
+                <a href="#" itemprop="url" rel="author">Pavit Bhutani</a>
+            </span>
+        </span>
+    </p>
+    
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    <h2 id="introduction">Introduction</h2>
+<p>In this post, we&rsquo;ll look at how to use vSphere Web Services API to perform tasks that cannot be done natively with PowerCLI commands. I will use the example of adding a host physical NIC to the specified LAG on a dVS.</p>
+<p>This post uses PowerShell Core 7.0.2, lab environment used is vSphere 7.0 GA. Let&rsquo;s go through it:</p>
+<h3 id="step-1-the-starting-point---managed-object-type">Step 1: The Starting Point - Managed Object Type:</h3>
+<p><a href="https://code.vmware.com/apis/968">vSphere Web Services API</a> is where you look up the Managed Object Type you want to work with, against which a &ldquo;method&rdquo; will be invoked that will perform the desired task. Object Types are divided into 2 broad categories:</p>
+<ol>
+<li>Objects which are components from the inventory referred to as &ldquo;managed entities&rdquo;. For e.g. a host system, virtual machine, datastore etc.</li>
+<li>Objects that provide services for the entire system. For e.g. AlarmManager, EventManager, LicenseManager etc.</li>
+</ol>
+<p>The object type <a href="https://vdc-download.vmware.com/vmwb-repository/dcr-public/b50dcbbf-051d-4204-a3e7-e1b618c1e384/538cf2ec-b34f-4bae-a332-3820ef9e7773/vim.host.NetworkSystem.html">HostNetworkSystem</a> and its method &lsquo;UpdateNetworkConfig&rsquo; is what we will use here:</p>
+<p><img src="/host-network-system-managed-object.png" alt="host-network-system-managed-object"></p>
+<p>Finding the right object type and method is something that will take time if you&rsquo;re new to it but will get easier as you work with objects more frequently.
+This is where the <a href="https://vdc-download.vmware.com/vmwb-repository/dcr-public/cdbbd51c-4824-4a1b-ad43-45df55a76a76/8cb3ed93-cac2-46aa-b329-db5a096af5bc/vsphere-web-services-sdk-67-programming-guide.pdf">vSphere Web Services SDK Programming Guide</a> helps with detailing the object types available with the API.</p>
+<h3 id="step-2---service-instance-and-getting-to-the-object-type">Step 2 - Service Instance and Getting to the Object Type:</h3>
+<p>The <a href="https://vdc-download.vmware.com/vmwb-repository/dcr-public/b50dcbbf-051d-4204-a3e7-e1b618c1e384/538cf2ec-b34f-4bae-a332-3820ef9e7773/vim.ServiceInstance.html">ServiceInstance</a> is the root object through which you access other object types. Connect to the vCenter server and access ServiceInstance as follows:</p>
+<pre><code>$serviceInstance = Get-View ServiceInstance
+</code></pre><p><img src="/service-instance.png" alt="service-instance"></p>
+<p>In this example, we would want to work on the hosts connected to the dVS and edit their network configuration to add the NIC to LAG. So you could access the &lsquo;RootFolder&rsquo; property from the serviceInstance object and navigate to the host managed entities. Or do a Get-View directly on the desired host(s) which is more efficient:</p>
+<pre><code>$vdsName = 'Compute*'
+$vmhost = Get-VMHost -DistributedSwitch $vdsName -Name *01*
+</code></pre><p>Remember that the Get-View command will take &lsquo;ManagedObjectReference&rsquo; as input type for the Id parameter, and the type of $vmhost.ExtensionData.ConfigManager.NetworkSystem object is:</p>
+<p><img src="/vmhost-type.png" alt="vmhost-type"></p>
+<p>So the hostNetworkSystemView object becomes:</p>
+<pre><code>$hostNetworkSystemView = Get-View -Id $vmhost.ExtensionData.ConfigManager.NetworkSystem
+</code></pre><p><img src="/vmhost-network-system-view.png" alt="vmhost-network-system-view"></p>
+<p>Just to make sure this is the right object type:</p>
+<p><img src="/vmhost-network-system-type.png" alt="vmhost-network-system-type"></p>
+<h3 id="step-3---building-parameters-and-invoking-the-method">Step 3 - Building Parameters and Invoking the Method:</h3>
+<p>Now that we have gotten to the right object type, let&rsquo;s create parameters to be passed to the method.
+As you see in the <a href="https://vdc-download.vmware.com/vmwb-repository/dcr-public/b50dcbbf-051d-4204-a3e7-e1b618c1e384/538cf2ec-b34f-4bae-a332-3820ef9e7773/vim.host.NetworkSystem.html#updateNetworkConfig">documentation of UpdateNetworkConfig</a>, it needs config and changeMode parameters.
+You see the object type of config as <a href="https://vdc-download.vmware.com/vmwb-repository/dcr-public/b50dcbbf-051d-4204-a3e7-e1b618c1e384/538cf2ec-b34f-4bae-a332-3820ef9e7773/vim.host.NetworkConfig.html">HostNetworkConfig</a>, so the PowerShell object type becomes VMware.Vim.HostNetworkConfig where VMware.Vim is the module name:</p>
+<pre><code>$hostNetworkConfig = New-Object VMware.Vim.HostNetworkConfig
+</code></pre><p>This then needs the proxySwitch property (object type <a href="https://vdc-download.vmware.com/vmwb-repository/dcr-public/b50dcbbf-051d-4204-a3e7-e1b618c1e384/538cf2ec-b34f-4bae-a332-3820ef9e7773/vim.host.HostProxySwitch.Config.html">HostProxySwitchConfig</a>):</p>
+<pre><code>$hostProxySwitchConfig = New-Object VMware.Vim.HostProxySwitchConfig
+$hostProxySwitchConfig.Uuid = $vds.ExtensionData.Uuid
+$hostProxySwitchConfig.ChangeOperation = [VMware.Vim.HostConfigChangeOperation]::edit
+</code></pre><p>Where you pass the spec (type <a href="https://vdc-download.vmware.com/vmwb-repository/dcr-public/b50dcbbf-051d-4204-a3e7-e1b618c1e384/538cf2ec-b34f-4bae-a332-3820ef9e7773/vim.host.HostProxySwitch.Specification.html">HostProxySwitchSpec</a>):</p>
+<pre><code>$hostProxySwitchConfig.Spec = New-Object VMware.Vim.HostProxySwitchSpec
+</code></pre><p>And its backing which doesn&rsquo;t show any further parameters under it.
+This is where you see the &lsquo;Extended by&rsquo; object type of <a href="https://vdc-download.vmware.com/vmwb-repository/dcr-public/b50dcbbf-051d-4204-a3e7-e1b618c1e384/538cf2ec-b34f-4bae-a332-3820ef9e7773/vim.dvs.HostMember.PnicBacking.html">DistributedVirtualSwitchHostMemberPnicBacking</a>:</p>
+<pre><code>$hostProxySwitchConfig.Spec.Backing = New-Object VMware.Vim.DistributedVirtualSwitchHostMemberPnicBacking
+$hostProxySwitchConfig.Spec.Backing.PnicSpec = ($netsys.NetworkInfo.ProxySwitch | ? {$_.DvsName -eq $vds.Name}).Spec.Backing.PnicSpec
+</code></pre><p>And create pnicSpec object for the NIC you want to add:</p>
+<pre><code>$pnicToAdd = New-Object VMware.Vim.DistributedVirtualSwitchHostMemberPnicSpec
+$pnicToAdd.PnicDevice = $pnicName
+$pnicToAdd.UplinkPortKey = $uplinks[0].Key
+$pnicToAdd.UplinkPortgroupKey = $uplinks[0].Portgroup.ExtensionData.MoRef.Value
+$hostProxySwitchConfig.Spec.Backing.PnicSpec += $pnicToAdd
+$hostNetworkConfig.ProxySwitch += $hostProxySwitchConfig
+</code></pre><p>And invoke the method using the parameters created:</p>
+<pre><code>$hostNetworkSystemView.UpdateNetworkConfig($hostNetworkConfig, [VMware.Vim.HostConfigChangeMode]::modify)
+</code></pre><h3 id="final-thoughts">Final thoughts:</h3>
+<p>This practically opens up the possibilities of using any available vSphere Web Services APIs with PowerCLI, so you&rsquo;re no longer limited by native cmdlets.
+Make sure to go through the SDK Programming Guide and keep playing around with the different object types available and their methods.</p>
+<p>That&rsquo;s it about this post, see you in the next one!</p>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+
+    <div class="share">
+        
+            <a class="icon-twitter" href="https://twitter.com/share?text=How%20to%20use%20vSphere%20Web%20Services%20API%20with%20PowerCLI&url=https%3a%2f%2fpavitbhutani.github.io%2f2-how-to-use-vsphere-web-services-api-powershell%2f"
+                onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa fa-twitter"></i>
+                <span class="hidden">Twitter</span>
+            </a>
+        
+
+        
+            <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fpavitbhutani.github.io%2f2-how-to-use-vsphere-web-services-api-powershell%2f"
+                onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                <i class="fa fa-facebook"></i>
+                <span class="hidden">Facebook</span>
+            </a>
+        
+
+        
+            <a class="icon-google-plus" href="https://plus.google.com/share?url=https%3a%2f%2fpavitbhutani.github.io%2f2-how-to-use-vsphere-web-services-api-powershell%2f"
+              onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+              <i class="fa fa-google-plus"></i>
+                <span class="hidden">Google+</span>
+            </a>
+        
+        
+    </div>
+</footer>
+
+        
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="Pavit Bhutani&#39;s Blog" href="https://pavitbhutani.github.io/">Pavit Bhutani&#39;s Blog</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2020 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://pavitbhutani.github.io/js/jquery-1.11.3.min.js"></script>
+        <script src="https://pavitbhutani.github.io/js/jquery.fitvids.js"></script>
+        <script src="https://pavitbhutani.github.io/js/scripts.js"></script>
+    </body>
+</html>
+

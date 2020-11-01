@@ -6,10 +6,21 @@
     <description>Recent content on Pavit Bhutani&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 15 Jul 2020 13:33:50 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 01 Nov 2020 16:15:00 +0000</lastBuildDate>
     
 	<atom:link href="https://pavitbhutani.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>How to use vSphere Web Services API with PowerCLI</title>
+      <link>https://pavitbhutani.github.io/2-how-to-use-vsphere-web-services-api-powershell/</link>
+      <pubDate>Sun, 01 Nov 2020 16:15:00 +0000</pubDate>
+      
+      <guid>https://pavitbhutani.github.io/2-how-to-use-vsphere-web-services-api-powershell/</guid>
+      <description>Introduction In this post, we&amp;rsquo;ll look at how to use vSphere Web Services API to perform tasks that cannot be done natively with PowerCLI commands. I will use the example of adding a host physical NIC to the specified LAG on a dVS.
+This post uses PowerShell Core 7.0.2, lab environment used is vSphere 7.0 GA. Let&amp;rsquo;s go through it:
+Step 1: The Starting Point - Managed Object Type: vSphere Web Services API is where you look up the Managed Object Type you want to work with, against which a &amp;ldquo;method&amp;rdquo; will be invoked that will perform the desired task.</description>
+    </item>
     
     <item>
       <title>How to Deploy a VM Template from Content Library using vSphere Automation API</title>

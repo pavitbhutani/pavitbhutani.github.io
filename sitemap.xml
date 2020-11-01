@@ -3,17 +3,22 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://pavitbhutani.github.io/1-content-library-vm-deploy-rest-api/</loc>
-    <lastmod>2020-07-15T13:33:50+00:00</lastmod>
+    <loc>https://pavitbhutani.github.io/2-how-to-use-vsphere-web-services-api-powershell/</loc>
+    <lastmod>2020-11-01T16:15:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://pavitbhutani.github.io/</loc>
-    <lastmod>2020-07-15T13:33:50+00:00</lastmod>
+    <lastmod>2020-11-01T16:15:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://pavitbhutani.github.io/post/</loc>
+    <lastmod>2020-11-01T16:15:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://pavitbhutani.github.io/1-content-library-vm-deploy-rest-api/</loc>
     <lastmod>2020-07-15T13:33:50+00:00</lastmod>
   </url>
   
