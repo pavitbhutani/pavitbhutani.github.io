@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Getting started with vCloud Director OpenAPI &middot; </title>
+        <meta name="description" content="Getting started with vCD OpenAPI using PowerShell.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.73.0" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta property="og:title" content="Getting started with vCloud Director OpenAPI">
+<meta property="og:description" content="Getting started with vCD OpenAPI using PowerShell.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://pavitbhutani.github.io/3-getting-started-with-vcd-openapi-using-powershell/">
+        <link rel="stylesheet" href="https://pavitbhutani.github.io/dist/site.css">
+        <link rel="stylesheet" href="https://pavitbhutani.github.io/dist/syntax.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+        
+        
+        
+        
+    </head>
+    <body>
+        
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="Pavit Bhutani&#39;s Blog" href="https://pavitbhutani.github.io/">Pavit Bhutani&#39;s Blog</a>
+                            </h1>
+                        
+                        <a class="button-square" href="https://pavitbhutani.github.io/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/pavitbhutani" rel="me">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/pavitbhutani" rel="me">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:pavitbhutani@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                    </div>
+
+                    <ul class="site-nav">
+                        
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Getting started with vCloud Director OpenAPI</h1>
+    
+        <p class="post-description" itemprop="description">Getting started with vCD OpenAPI using PowerShell.</p>
+    
+    <p class="post-date post-line">
+        <span>Published <time datetime="2021-04-24" itemprop="datePublished">Sat, Apr 24, 2021</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
+            <span itemprop="name">
+                <a href="#" itemprop="url" rel="author">Pavit Bhutani</a>
+            </span>
+        </span>
+    </p>
+    
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    <h2 id="introduction">Introduction</h2>
+<p>vCloud OpenAPI was introduced with vCloud Director version 9.5 and is something that supplements the legacy vCloud API currently (might replace it in the long run but nothing announced from VMware on this yet). You can check the documentation of OpenAPI on your vCloud instance at https://<em>vcloud_IP_or_FQDN</em>/docs.</p>
+<p>In this post, we&rsquo;ll look at how to use <a href="https://vdc-download.vmware.com/vmwb-repository/dcr-public/a36f68c4-9f5a-4a63-894c-eb3840773fe7/b37fc25f-f5f3-442b-b3a6-d93d38132e06/vcd-openapi-docs.html">vCloud Director OpenAPI</a> with PowerShell. If you are looking for steps to use the API with Postman, <a href="https://fojta.wordpress.com/2018/10/18/postman-and-vcloud-director-9-5-access-token-authentication/">here</a> is a nice article from Tomas Fojta.</p>
+<p>This post uses PowerShell Core 7.0.2 installed on a Mac, lab environment used is vCloud Director 10.1.2. Let&rsquo;s break it down:</p>
+<h3 id="part-1-api-authentication">Part 1: API Authentication:</h3>
+<p>The first part is API authentication i.e. obtaining the bearer token using Basic Auth with vCloud credentials. This is done for tenant at /1.0.0/sessions and for provider at /1.0.0/sessions/provider. We&rsquo;ll use tenant login in this example:</p>
+<pre><code>$vcloudHost = &quot;vcloud_fqdn_or_ip&quot;
+#Do not use 'system' as login for provider is a different method.
+$vcloudOrg = &quot;org_name&quot;
+$vcloudUserName = &quot;user_name&quot;
+$vcloudPassword = &quot;password&quot;
+$vcloudApiVersion = &quot;34.0&quot;
+
+$vcdAuth = $vcloudUserName + '@' + $vcloudOrg + ':' + $vcloudPassword
+$vcdEncoded = [System.Text.Encoding]::UTF8.GetBytes($vcdAuth)
+$vcdEncodedPassword = [System.Convert]::ToBase64String($vcdEncoded)
+$headers = @{&quot;Accept&quot;=&quot;application/*;version=$vcloudApiVersion&quot;}
+$vcloudBaseUrl = &quot;https://$vcloudHost/cloudapi&quot;
+$vcloudLoginUrl = $vcloudBaseUrl + &quot;/1.0.0/sessions&quot;
+$headers += @{&quot;Authorization&quot;=&quot;Basic $($vcdEncodedPassword)&quot;}
+
+$vcloudLoginResponse = Invoke-WebRequest -Uri $vcloudLoginUrl -Headers $headers -Method POST -UseBasicParsing
+</code></pre><p>Here&rsquo;s the header object at this point:</p>
+<p><img src="/vcd-openapi-header-object-basic.png" alt="vcd-openapi-header-object-basic"></p>
+<p>If the login succeeded, you&rsquo;ll have the token (a 612-character string) with its type under Headers in the response object:</p>
+<p><img src="/vcd-openapi-response-object.png" alt="vcd-openapi-response-object"></p>
+<h3 id="part-2-api-header-and-authorization">Part 2: API Header and Authorization:</h3>
+<p>The old way to authorize (deprecated now) would be adding &lsquo;x-vcloud-authorization&rsquo; from login response to the header object already containing Basic Authorization.</p>
+<p>The new way with both legacy and OpenAPI is to change the authorization to Bearer Token and use the &lsquo;X-VMWARE-VCLOUD-ACCESS-TOKEN&rsquo; from the login response. We&rsquo;ll edit Authorization in the header object based on this:</p>
+<pre><code>$headers[&quot;Authorization&quot;] = &quot;$($vcloudLoginResponse.Headers.&quot;X-VMWARE-VCLOUD-TOKEN-TYPE&quot;) $($vcloudLoginResponse.Headers.&quot;X-VMWARE-VCLOUD-ACCESS-TOKEN&quot;)&quot;
+</code></pre><p>The header object now looks like this:</p>
+<p><img src="/vcd-openapi-header-object-bearer.png" alt="vcd-openapi-header-object-bearer"></p>
+<h3 id="part-3-quick-comparison-with-legacy-vcloud-api">Part 3: Quick comparison with legacy vCloud API:</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Legacy API</th>
+<th>OpenAPI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content-Type</td>
+<td>xml or json</td>
+<td>json always</td>
+</tr>
+<tr>
+<td>Tenant Login URL</td>
+<td>/api/sessions</td>
+<td>/1.0.0/sessions</td>
+</tr>
+<tr>
+<td>Provider Login URL (Org name is &lsquo;system&rsquo;)</td>
+<td>/api/sessions</td>
+<td>/1.0.0/sessions/provider</td>
+</tr>
+<tr>
+<td>API Structuring</td>
+<td>Navigational style (where every object has links to related objects)</td>
+<td>Flat structure</td>
+</tr>
+<tr>
+<td>Query</td>
+<td>A very handy list of queries available at /api/query</td>
+<td>NA</td>
+</tr>
+<tr>
+<td>Filtering Example</td>
+<td>/api/query?type=user&amp;filter=(name==user1;isLdapUser==true)</td>
+<td>NA</td>
+</tr>
+<tr>
+<td>Page View</td>
+<td>/api/query?type=user&amp;page=2&amp;pageSize=10</td>
+<td>/1.0.0/users?filter=&amp;page=2&amp;pageSize=10</td>
+</tr>
+</tbody>
+</table>
+<p>That&rsquo;s about it for this post, see you in the next one!</p>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+
+    <div class="share">
+        
+            <a class="icon-twitter" href="https://twitter.com/share?text=Getting%20started%20with%20vCloud%20Director%20OpenAPI&url=https%3a%2f%2fpavitbhutani.github.io%2f3-getting-started-with-vcd-openapi-using-powershell%2f"
+                onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa fa-twitter"></i>
+                <span class="hidden">Twitter</span>
+            </a>
+        
+
+        
+            <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fpavitbhutani.github.io%2f3-getting-started-with-vcd-openapi-using-powershell%2f"
+                onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                <i class="fa fa-facebook"></i>
+                <span class="hidden">Facebook</span>
+            </a>
+        
+
+        
+            <a class="icon-google-plus" href="https://plus.google.com/share?url=https%3a%2f%2fpavitbhutani.github.io%2f3-getting-started-with-vcd-openapi-using-powershell%2f"
+              onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+              <i class="fa fa-google-plus"></i>
+                <span class="hidden">Google+</span>
+            </a>
+        
+        
+    </div>
+</footer>
+
+        
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="Pavit Bhutani&#39;s Blog" href="https://pavitbhutani.github.io/">Pavit Bhutani&#39;s Blog</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2021 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://pavitbhutani.github.io/js/jquery-1.11.3.min.js"></script>
+        <script src="https://pavitbhutani.github.io/js/jquery.fitvids.js"></script>
+        <script src="https://pavitbhutani.github.io/js/scripts.js"></script>
+    </body>
+</html>
+

@@ -6,10 +6,20 @@
     <description>Recent content in Posts on Pavit Bhutani&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 01 Nov 2020 16:15:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 24 Apr 2021 17:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://pavitbhutani.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Getting started with vCloud Director OpenAPI</title>
+      <link>https://pavitbhutani.github.io/3-getting-started-with-vcd-openapi-using-powershell/</link>
+      <pubDate>Sat, 24 Apr 2021 17:00:00 +0000</pubDate>
+      
+      <guid>https://pavitbhutani.github.io/3-getting-started-with-vcd-openapi-using-powershell/</guid>
+      <description>Introduction vCloud OpenAPI was introduced with vCloud Director version 9.5 and is something that supplements the legacy vCloud API currently (might replace it in the long run but nothing announced from VMware on this yet). You can check the documentation of OpenAPI on your vCloud instance at https://vcloud_IP_or_FQDN/docs.
+In this post, we&amp;rsquo;ll look at how to use vCloud Director OpenAPI with PowerShell. If you are looking for steps to use the API with Postman, here is a nice article from Tomas Fojta.</description>
+    </item>
     
     <item>
       <title>How to use vSphere Web Services API with PowerCLI</title>
