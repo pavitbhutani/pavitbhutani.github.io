@@ -113,7 +113,7 @@ $vcloudLoginResponse = Invoke-WebRequest -Uri $vcloudLoginUrl -Headers $headers 
 </code></pre><p>Here&rsquo;s the header object at this point:</p>
 <p><img src="/vcd-openapi-header-object-basic.png" alt="vcd-openapi-header-object-basic"></p>
 <p>If the login succeeded, you&rsquo;ll have the token (a 612-character string) with its type under Headers in the response object:</p>
-<p><img src="/vcd-openapi-response-object.png" alt="vcd-openapi-response-object"></p>
+<p><img src="/vcd-openapi-response-object-2.png" alt="vcd-openapi-response-object"></p>
 <h3 id="part-2-api-header-and-authorization">Part 2: API Header and Authorization:</h3>
 <p>The old way to authorize (deprecated now) would be adding &lsquo;x-vcloud-authorization&rsquo; from login response to the header object already containing Basic Authorization.</p>
 <p>The new way with both legacy and OpenAPI is to change the authorization to Bearer Token and use the &lsquo;X-VMWARE-VCLOUD-ACCESS-TOKEN&rsquo; from the login response. We&rsquo;ll edit Authorization in the header object based on this:</p>
